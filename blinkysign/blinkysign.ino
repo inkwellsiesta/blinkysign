@@ -21,12 +21,14 @@ Sign sign;
 // the setup routine runs once when you press reset:
 void setup() {
   sign.initialize();
-  sign.startupSequence(Sign::WAVE);
-  sign.startupSequence(Sign::CELLCYCLE);
   
-  sign.setCellColor(TOPLEFT, 255, 0, 0);
+  sign.startupSequence(Sign::CWWAVE); // FORJOHN: change the startup sequence
+  sign.startupSequence(Sign::CELLCYCLE);
+  sign.startupSequence(Sign::CCWWAVE);
+  
+  sign.setCellColor(TOPLEFT, 255, 0, 0); // FORJOHN: change the colors of the cells
   sign.setCellColor(TOPRIGHT, 0, 255, 0);
-  sign.setCellColor(BOTTOMLEFT, 0, 0, 255);
+  sign.setCellColor(BOTTOMLEFT, 0, 255, 255);
   sign.setCellColor(BOTTOMRIGHT, 255, 0, 255);
 }
 

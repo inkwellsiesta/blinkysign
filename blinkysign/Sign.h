@@ -28,11 +28,12 @@ const uint8_t BOTTOMLEFT[] = {0, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37}
 
 class Sign {
   public:
-    enum StartupPattern {WAVE, CELLCYCLE};
+    enum StartupPattern {CWWAVE, CELLCYCLE, CCWWAVE};
     
     void initialize();
     void startupSequence(StartupPattern);
-    void wave(uint8_t, uint8_t, uint8_t);
+    void cwWave(uint8_t, uint8_t, uint8_t);
+    void ccwWave(uint8_t, uint8_t, uint8_t);
     void setCellColor(const uint8_t *, uint8_t, uint8_t, uint8_t);
     
   private:
@@ -44,7 +45,8 @@ class Sign {
     Adafruit_NeoPixel pixels;
     
     void initialize(int, int);
-    void cellWave(const uint8_t *, uint8_t, uint8_t, uint8_t);
+    void cwCellWave(const uint8_t *, uint8_t, uint8_t, uint8_t);
+    void ccwCellWave(const uint8_t *, uint8_t, uint8_t, uint8_t);
 };
 
 
@@ -57,15 +59,15 @@ void Sign::initialize(int pin, int numLights) {
   pixels.updateLength(numLights);
   pixels.updateType(NEO_GRB + NEO_KHZ800);
   pixels.begin();
-  pixels.setBrightness(100);
+  pixels.setBrightness(100); // FORJOHN: change brightness from 0 to 100
   pixels.clear();
   pixels.show();
 }
 
 void Sign::startupSequence(StartupPattern pattern) {
   switch (pattern) {
-    case WAVE :
-      wave(255, 255, 255);
+    case CWWAVE :
+      cwWave(255, 255, 255); // FORJOHN: change the color of the startup wave
       break;
     case CELLCYCLE :
       pixels.clear();
@@ -80,22 +82,40 @@ void Sign::startupSequence(StartupPattern pattern) {
       pixels.clear();
       setCellColor(BOTTOMRIGHT, 255, 255, 255);
       delay(1000);
-      
+      break;
+    case CCWWAVE : 
+      ccwWave(255, 255, 255);
       break;
   };
 }
 
-void Sign::wave( uint8_t r, uint8_t g, uint8_t b) {
-      cellWave(TOPLEFT, r, g, b); 
-      cellWave(TOPRIGHT, r, g, b);
-      cellWave(BOTTOMRIGHT, r, g, b);
-      cellWave(BOTTOMLEFT, r, g, b);
+void Sign::cwWave( uint8_t r, uint8_t g, uint8_t b) {
+      cwCellWave(TOPLEFT, r, g, b); 
+      cwCellWave(TOPRIGHT, r, g, b);
+      cwCellWave(BOTTOMRIGHT, r, g, b);
+      cwCellWave(BOTTOMLEFT, r, g, b);
 }
 
-void Sign::cellWave(const uint8_t * cellIdx, uint8_t r, uint8_t g, uint8_t b) {
+void Sign::ccwWave( uint8_t r, uint8_t g, uint8_t b) {
+      ccwCellWave(TOPLEFT, r, g, b); 
+      ccwCellWave(BOTTOMLEFT, r, g, b);
+      ccwCellWave(BOTTOMRIGHT, r, g, b);
+      ccwCellWave(TOPRIGHT, r, g, b);
+}
+
+void Sign::cwCellWave(const uint8_t * cellIdx, uint8_t r, uint8_t g, uint8_t b) {
   for (int i = 0; i < LIGHTSPERCELL; ++i) {
     pixels.clear();
     pixels.setPixelColor(*(cellIdx+i), pgm_read_byte(&gamma[r]), pgm_read_byte(&gamma[g]), pgm_read_byte(&gamma[b]));
+    pixels.show();
+    delay(30);
+  }
+};
+
+void Sign::ccwCellWave(const uint8_t * cellIdx, uint8_t r, uint8_t g, uint8_t b) {
+  for (int i = LIGHTSPERCELL; i > 0; --i) {
+    pixels.clear();
+    pixels.setPixelColor(*(cellIdx+i-1), pgm_read_byte(&gamma[r]), pgm_read_byte(&gamma[g]), pgm_read_byte(&gamma[b]));
     pixels.show();
     delay(30);
   }
