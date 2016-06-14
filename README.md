@@ -1,6 +1,6 @@
 # blinkysign
 
-![blinkysign](/images/bsbssign.gif)
+![blinkysign](/images/bsbcsign.gif)
 
 # Depedencies
 
