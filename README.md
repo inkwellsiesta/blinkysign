@@ -17,7 +17,3 @@
 * [2.1mm barrel jack] (http://www.adafruit.com/products/373)
 * [5V 4A power supply] (http://www.adafruit.com/product/1466)
 
-## Hardware
-* 1x3 lumber
-* 1/4 inch plywood
-* decking screws
